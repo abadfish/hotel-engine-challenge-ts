@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Switch>
-        <Route path='/' component={ Repos } />
+        <Route path='/' exact component={ Repos } />
         <Route path='/repos/:id' component={ Repo } />
       </Switch>
     </BrowserRouter>

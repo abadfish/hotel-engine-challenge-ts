@@ -7,9 +7,9 @@ const Search: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null!)
 
   async function fetchRepos (term:String) {
-      const res = await fetch(`https://api.github.com/search/repositories?q=${term}`)
-      const repoResponse = await res.json()
-      console.log(repoResponse)
+    const res = await fetch(`https://api.github.com/search/repositories?q=${term}`)
+    const repoResponse = await res.json()
+    console.log(repoResponse)
   }
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {

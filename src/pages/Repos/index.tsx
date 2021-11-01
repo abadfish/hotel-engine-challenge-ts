@@ -1,13 +1,26 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Search from '../../components/Search'
+import { ReposContext } from '../../Provider'
 
-const Repos = () => {
+
+const Repos: React.FC = () => {
+  const { loading, repos } = useContext(ReposContext)
+  console.log(repos)
+  
+  const repoList = repos?.map((r:any) => (
+    <div>{ r.name }</div>
+  ))
+
+  loading && <div>Loading...</div>
+
+
   return (
     <div>
       <Search />
-      <h1>search results</h1>
+      { repoList }
     </div>
   )
 }
+
 
 export default Repos

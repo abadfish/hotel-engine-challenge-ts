@@ -40,6 +40,7 @@ export const ReposContext = createContext(initialState)
 const ReposProvider: React.FC = ({ children }) => {
 
   const [state, dispatch] = useReducer(reducer, initialState)
+  console.log(state)
 
   async function fetchRepos (term:String) {
     try {

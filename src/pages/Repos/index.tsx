@@ -5,16 +5,28 @@ import { ReposContext } from '../../Provider'
 
 
 const Repos: React.FC = () => {
+
   const { loading, repos, errors } = useContext(ReposContext)
-  console.log(errors, loading, repos)
-  debugger
+
+  // console.log(errors, loading, repos)
   const repoList = repos?.map((r:any) => (
-    <div key={ r.id }><Link to={`/repos/${ r.id }`}>{ r.name }</Link></div>
+    <div key={ r.id }>
+      <Link 
+        to={{
+          pathname: `/repos/${ r.id }`,
+          state: {
+            owner: r.owner.login,
+            repo: r.name
+          }
+        }}
+      >{ r.name }</Link>
+    </div>
   ))
 
   const errorDisplay = Object.keys(errors).length > 0 ? 
-    Object.values(errors).map((error:any) => <div>{error}</div>)
+    Object.values(errors).map((error:any) => <div>{ error }</div>)
   : null
+
   loading && <div>Loading...</div>
   
 

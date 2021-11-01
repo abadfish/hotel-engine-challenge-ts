@@ -62,13 +62,29 @@ const ReposProvider: React.FC = ({ children }) => {
   async function fetchRepos (term:String) {
     dispatch({ type: ActionType.MAKING_API_REQUEST, payload: null })
     try {
-      const res = await fetch(`https://api.github.com/search/repositories+q=${term}`)
-      const repoResponse = await res.json()
-      if (repoResponse.items) {
-        dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: repoResponse.items })
+      const res = await fetch(`https://api.github.com/search/repositories?q=${term}`)
+      const apiResponse = await res.json()
+      if (apiResponse.items) {
+        dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse.items })
       } else {
-        dispatch({ type: ActionType.FAILED_API_REQUEST, payload: repoResponse })
+        dispatch({ type: ActionType.FAILED_API_REQUEST, payload: apiResponse })
       }
+    } catch {
+      alert("Fetch failed")
+      dispatch({ type: ActionType.FAILED_API_REQUEST, payload: { 'message': 'fetch failed.'} })
+    }
+  }
+  async function fetchRepo (owner:String, repo:String) {
+    dispatch({ type: ActionType.MAKING_API_REQUEST, payload: null })
+    try {
+      const res = await fetch(`https://api.github.com//repos/${owner}/${repo}`)
+      const apiResponse = await res.json()
+      console.log(apiResponse)
+      // if (apiResponse.items) {
+      //   dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse.items })
+      // } else {
+      //   dispatch({ type: ActionType.FAILED_API_REQUEST, payload: apiResponse })
+      // }
     } catch {
       alert("Fetch failed")
       dispatch({ type: ActionType.FAILED_API_REQUEST, payload: { 'message': 'fetch failed.'} })
@@ -80,6 +96,7 @@ const ReposProvider: React.FC = ({ children }) => {
     errors: state.errors,
     repos: state.repos,
     fetchRepos,
+    fetchRepo,
   }
 
   return (

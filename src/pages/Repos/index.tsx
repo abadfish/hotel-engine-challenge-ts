@@ -13,11 +13,11 @@ const Repos: React.FC = () => {
     <div key={ r.id }>
       <Link 
         to={{
-          pathname: `/repos/${ r.id }`,
-          state: {
-            owner: r.owner.login,
-            repo: r.name
-          }
+          pathname: `/repos/${ r.owner.login }+${ r.name }`,
+          // state: {
+          //   owner: r.owner.login,
+          //   repo: r.name
+          // }
         }}
       >{ r.name }</Link>
     </div>

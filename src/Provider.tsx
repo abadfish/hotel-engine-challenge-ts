@@ -2,22 +2,27 @@ import React, { createContext, useReducer } from 'react'
 
 const initialState = {
   repos: [],
+  repo: {},
   loading: false,
   errors: {},
-  fetchRepos: (term: string) => new Promise((resolve, reject) => {})
+  fetchRepos: (term: string) => new Promise((resolve, reject) => {}),
+  fetchRepo: (owner: string, repo: string) => new Promise((resolve, reject) => {})
 }
 
 enum ActionType {
   MAKING_API_REQUEST = "MAKING_API_REQUEST",
   SUCCESSFUL_REPOS_FETCH = "SUCCESSFUL_REPOS_FETCH",
-  FAILED_API_REQUEST = "FAILED_API_REQUEST"
+  FAILED_API_REQUEST = "FAILED_API_REQUEST",
+  SUCCESSFUL_REPO_FETCH = "SUCCESSFUL_REPO_FETCH"
 }
 
 interface State {
   repos?: any,
+  repo: any,
   loading: boolean,
   errors?: any,
-  fetchRepos: ((term: string) => Promise<any>) | undefined
+  fetchRepos: ((term: string) => Promise<any>) | undefined,
+  fetchRepo: ((owner: string, repo: string) => Promise<any>) | undefined
 }
 
 interface Action {
@@ -38,7 +43,8 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         ...state,
         loading: false,
         errors: action.payload,
-        repos: []
+        repos: [],
+        repo: {}
       }
     case ActionType.SUCCESSFUL_REPOS_FETCH:
       return { 
@@ -47,10 +53,17 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         errors: {},
         repos: action.payload 
       }
-      default:
-        return state
-    }
+    case ActionType.SUCCESSFUL_REPO_FETCH:
+      return { 
+        ...state,
+        loading: false,
+        errors: {},
+        repo: action.payload 
+      }
+    default:
+      return state
   }
+}
 
 export const ReposContext = createContext(initialState)
 
@@ -77,14 +90,13 @@ const ReposProvider: React.FC = ({ children }) => {
   async function fetchRepo (owner:String, repo:String) {
     dispatch({ type: ActionType.MAKING_API_REQUEST, payload: null })
     try {
-      const res = await fetch(`https://api.github.com//repos/${owner}/${repo}`)
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
       const apiResponse = await res.json()
-      console.log(apiResponse)
-      // if (apiResponse.items) {
-      //   dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse.items })
-      // } else {
-      //   dispatch({ type: ActionType.FAILED_API_REQUEST, payload: apiResponse })
-      // }
+      if (apiResponse.message) {
+        dispatch({ type: ActionType.FAILED_API_REQUEST, payload: apiResponse.message })
+      } else {
+        dispatch({ type: ActionType.SUCCESSFUL_REPO_FETCH, payload: apiResponse })
+      }
     } catch {
       alert("Fetch failed")
       dispatch({ type: ActionType.FAILED_API_REQUEST, payload: { 'message': 'fetch failed.'} })
@@ -95,6 +107,7 @@ const ReposProvider: React.FC = ({ children }) => {
     loading: state.loading,
     errors: state.errors,
     repos: state.repos,
+    repo: state.repo,
     fetchRepos,
     fetchRepo,
   }

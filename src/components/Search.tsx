@@ -1,16 +1,14 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
+import { ReposContext } from '../Provider'
 
 
 const Search: React.FC = () => {
 
+  const { fetchRepos } = useContext(ReposContext)
+
   const [searchTerm, setSearchTerm] = useState('')
   const formRef = useRef<HTMLFormElement>(null!)
 
-  async function fetchRepos (term:String) {
-    const res = await fetch(`https://api.github.com/search/repositories?q=${term}`)
-    const repoResponse = await res.json()
-    console.log(repoResponse)
-  }
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.currentTarget.value)

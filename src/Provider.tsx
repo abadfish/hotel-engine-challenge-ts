@@ -2,7 +2,9 @@ import React, { createContext, useReducer } from 'react'
 
 const initialState = {
   loading: false,
-  repos: []
+  repos: [],
+  fetchRepos: (term: string) => new Promise((resolve, reject) => {})
+
 }
 
 enum ActionType {
@@ -20,7 +22,6 @@ interface Action {
   payload: any
 }
 
-
 const reducer: React.Reducer<State, Action> = (state, action) => {
   switch (action.type) {
     case ActionType.SUCCESSFUL_REPOS_FETCH:
@@ -34,16 +35,27 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
     }
   }
 
-const ReposContext = createContext(initialState)
+export const ReposContext = createContext(initialState)
 
 const ReposProvider: React.FC = ({ children }) => {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const values = {
-    loading: state.loading
+  async function fetchRepos (term:String) {
+    try {
+      const res = await fetch(`https://api.github.com/search/repositories?q=${term}`)
+      const repoResponse = await res.json()
+      dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: repoResponse.items })
+    } catch {
+      alert("Fetch failed")
+    }
   }
 
+  const values = {
+    loading: state.loading,
+    repos: state.repos,
+    fetchRepos,
+  }
 
   return (
     <ReposContext.Provider value={ values }>

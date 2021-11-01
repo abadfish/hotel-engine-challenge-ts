@@ -1,10 +1,10 @@
 import React, { createContext, useReducer } from 'react'
 
 const initialState = {
-  loading: false,
   repos: [],
+  loading: false,
+  errors: {},
   fetchRepos: (term: string) => new Promise((resolve, reject) => {})
-
 }
 
 enum ActionType {
@@ -14,6 +14,7 @@ enum ActionType {
 interface State {
   repos?: any,
   loading: boolean,
+  errors: any,
   fetchRepos: ((term: string) => Promise<any>) | undefined
 }
 
@@ -54,6 +55,7 @@ const ReposProvider: React.FC = ({ children }) => {
 
   const values = {
     loading: state.loading,
+    errors: state.errors,
     repos: state.repos,
     fetchRepos,
   }
@@ -62,7 +64,6 @@ const ReposProvider: React.FC = ({ children }) => {
     <ReposContext.Provider value={ values }>
       { children }
     </ReposContext.Provider>
-
   )
 }
 

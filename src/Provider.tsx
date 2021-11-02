@@ -1,14 +1,5 @@
 import React, { createContext, useReducer } from 'react'
 
-const initialState = {
-  repos: [],
-  repo: {},
-  loading: false,
-  errors: {},
-  fetchRepos: (term: string) => new Promise((resolve, reject) => {}),
-  fetchRepo: (owner: string, repo: string) => new Promise((resolve, reject) => {})
-}
-
 enum ActionType {
   MAKING_API_REQUEST = "MAKING_API_REQUEST",
   SUCCESSFUL_REPOS_FETCH = "SUCCESSFUL_REPOS_FETCH",
@@ -16,9 +7,11 @@ enum ActionType {
   SUCCESSFUL_REPO_FETCH = "SUCCESSFUL_REPO_FETCH"
 }
 
+// declare types to pass to reducer
 interface State {
   repos?: any,
   repo: any,
+  repoCount: any,
   loading: boolean,
   errors?: any,
   fetchRepos: ((term: string) => Promise<any>) | undefined,
@@ -30,12 +23,25 @@ interface Action {
   payload: any | null
 }
 
+// declare state for provider
+const initialState = {
+  repos: [],
+  repoCount: null,
+  repo: {},
+  loading: false,
+  errors: {},
+  fetchRepos: (term: string) => new Promise((resolve, reject) => {}),
+  fetchRepo: (owner: string, repo: string) => new Promise((resolve, reject) => {}),
+}
+
+// reducer to handle global state change 
 const reducer: React.Reducer<State, Action> = (state, action) => {
   switch (action.type) {
     case ActionType.MAKING_API_REQUEST:
       return { 
         ...state,
         loading: true,
+        repoCount: null,
         errors: {}
       }
     case ActionType.FAILED_API_REQUEST:
@@ -51,8 +57,10 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         ...state,
         loading: false,
         errors: {},
-        repos: action.payload 
+        repos: action.payload.items,
+        repoCount: action.payload.total_count.toString() 
       }
+      // ^^^ using toString here so we get a truthy value because JS treats null/undefined/0 the same
     case ActionType.SUCCESSFUL_REPO_FETCH:
       return { 
         ...state,
@@ -65,22 +73,20 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
   }
 }
 
+// context to share state globally
 export const ReposContext = createContext(initialState)
 
 const ReposProvider: React.FC = ({ children }) => {
 
   const [state, dispatch] = useReducer(reducer, initialState)
-  console.log(state)
 
   async function fetchRepos (queryString:String) {
     dispatch({ type: ActionType.MAKING_API_REQUEST, payload: null })
     try {
-      const res = await fetch(`https://api.github.com/search/repositories?q=cats+language:&sort=&order=desc`)
-      // +language:Python&sort=stars&order=desc
-      // const res = await fetch(`https://api.github.com/search/repositories?q=${queryString}`)
+      const res = await fetch(`https://api.github.com/search/repositories?${queryString}`)
       const apiResponse = await res.json()
       if (apiResponse.items) {
-        dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse.items })
+        dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse })
       } else {
         dispatch({ type: ActionType.FAILED_API_REQUEST, payload: apiResponse })
       }
@@ -109,6 +115,7 @@ const ReposProvider: React.FC = ({ children }) => {
     loading: state.loading,
     errors: state.errors,
     repos: state.repos,
+    repoCount: state.repoCount,
     repo: state.repo,
     fetchRepos,
     fetchRepo,

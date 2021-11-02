@@ -1,4 +1,5 @@
 import React, { useState, useRef, useContext } from 'react'
+import styled from 'styled-components'
 import { ReposContext } from '../Provider'
 
 
@@ -6,20 +7,14 @@ const Search: React.FC = () => {
 
   const { fetchRepos } = useContext(ReposContext)
 
-  const [queryString, setQueryString] = useState('')
   const [urlParams, setUrlParams] = useState({
     searchTerm: '',
     filterBy: '',
     sortBy: '',
-
   })
-  // https://api.github.com/search/repositories?q=${term}` +language:Python&sort=stars&order=desc
-      // +language:${language}&sort=&{sortBy}&order=desc
-  console.log(queryString)
-  console.log(urlParams)
+
   const formRef = useRef<HTMLFormElement>(null!)
 
-  // setUrlString(urlString.concat(e.currentTarget.value))
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget
     setUrlParams({ ...urlParams, [name]: value})
@@ -28,15 +23,20 @@ const Search: React.FC = () => {
     setUrlParams({ ...urlParams, sortBy: e.currentTarget.value})
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const setQueryString = () => {
+    const { searchTerm, filterBy, sortBy } = urlParams
+    return `q=${searchTerm}+language:${filterBy}&sort=${sortBy}&order=desc`
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const queryString = await setQueryString()
     fetchRepos(queryString)
-    setQueryString('')
     formRef.current.reset()
   }
 
   return (
-    <form ref={ formRef } onSubmit={ handleSubmit }>
+    <Form ref={ formRef } onSubmit={ handleSubmit }>
       <p>Search by:</p>
       <input 
         type='text' 
@@ -58,8 +58,12 @@ const Search: React.FC = () => {
         <option value="stars">Number of Stars</option>
       </select>
       <button type='submit'>Search</button>
-    </form>
+    </Form>
   )
 }
 
 export default Search
+
+const Form = styled.form `
+
+`

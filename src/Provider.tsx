@@ -60,7 +60,6 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         repos: action.payload.items,
         repoCount: action.payload.total_count
       }
-      // ^^^ using toString here so we get a truthy value because JS treats null/undefined/0 the same
     case ActionType.SUCCESSFUL_REPO_FETCH:
       return { 
         ...state,

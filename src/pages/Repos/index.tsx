@@ -7,7 +7,7 @@ import { ReposContext } from '../../Provider'
 const Repos: React.FC = () => {
 
   const { loading, repos, errors } = useContext(ReposContext)
-
+  
   // console.log(errors, loading, repos)
   const repoList = repos?.map((r:any) => (
     <div key={ r.id }>
@@ -31,6 +31,7 @@ const Repos: React.FC = () => {
   
 
   return (
+    // Need to add sort and filter both before(param choice) and after (provider reducer) results 
     <div>
       <Search />
       { errorDisplay }

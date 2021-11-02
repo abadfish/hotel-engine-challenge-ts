@@ -28,12 +28,14 @@ const Repo: React.FC = () => {
         repoKeys.push(key)
         repoValues.push(value)
       } else if (typeof value === 'object') {
-        parseRepoDetails(value)
+        repoKeys.push(key)
+        repoValues.push(parseRepoDetails(value))
       }
+      return null
     })
     return repoKeys.map((k:any, i:number) => (
       <DataRow key={ k }>
-        <DataCell>{ k }: </DataCell> 
+        <DataCell><strong>{ k }: </strong></DataCell> 
         <DataCell>{ repoValues[i] }</DataCell>
       </DataRow>
     ))      
@@ -41,7 +43,7 @@ const Repo: React.FC = () => {
 
 
   const repoDetails = repo ? parseRepoDetails(repo) : null
-  console.log(repoDetails)
+  // console.log(repoDetails)
      
   return (
     <div>
@@ -56,8 +58,4 @@ const DataRow = styled.div `
   display: flex;
 `
 const DataCell = styled.div `
-  font-weight: bold;
-`
-const DataSubRow = styled.div `
-
 `

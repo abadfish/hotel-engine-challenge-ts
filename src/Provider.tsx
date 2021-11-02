@@ -72,10 +72,12 @@ const ReposProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   console.log(state)
 
-  async function fetchRepos (term:String) {
+  async function fetchRepos (queryString:String) {
     dispatch({ type: ActionType.MAKING_API_REQUEST, payload: null })
     try {
-      const res = await fetch(`https://api.github.com/search/repositories?q=${term}`)
+      const res = await fetch(`https://api.github.com/search/repositories?q=cats+language:&sort=&order=desc`)
+      // +language:Python&sort=stars&order=desc
+      // const res = await fetch(`https://api.github.com/search/repositories?q=${queryString}`)
       const apiResponse = await res.json()
       if (apiResponse.items) {
         dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse.items })

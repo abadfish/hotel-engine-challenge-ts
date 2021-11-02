@@ -22,6 +22,7 @@ const Repo: React.FC = () => {
     fetchRepo(owner, repoName)
   }, [owner, repoName])
 
+  // I have done this because there are too many details to type them all. Readme did not specify which to render so you get them all!
   function parseRepoDetails(details: any) {
     const repoKeys:any = []
     const repoValues:any = []

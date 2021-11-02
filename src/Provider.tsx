@@ -41,7 +41,6 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
       return { 
         ...state,
         loading: true,
-        repoCount: null,
         errors: {}
       }
     case ActionType.FAILED_API_REQUEST:
@@ -50,7 +49,8 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         loading: false,
         errors: action.payload,
         repos: [],
-        repo: {}
+        repo: {},
+        repoCount: null
       }
     case ActionType.SUCCESSFUL_REPOS_FETCH:
       return { 
@@ -83,7 +83,7 @@ const ReposProvider: React.FC = ({ children }) => {
   async function fetchRepos (queryString:String) {
     dispatch({ type: ActionType.MAKING_API_REQUEST, payload: null })
     try {
-      const res = await fetch(`https://api.github.com/search/repositories?${queryString}`)
+      const res = await fetch(`https://api.github.com/search/repositories?${queryString}&per_page=100`)
       const apiResponse = await res.json()
       if (apiResponse.items) {
         dispatch({ type: ActionType.SUCCESSFUL_REPOS_FETCH, payload: apiResponse })

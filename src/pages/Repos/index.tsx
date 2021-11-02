@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import Search from '../../components/Search'
 import { ReposContext } from '../../Provider'
 
@@ -7,6 +8,7 @@ import { ReposContext } from '../../Provider'
 const Repos: React.FC = () => {
 
   const { loading, repos, errors, repoCount } = useContext(ReposContext)
+  console.log(repos)
   
   const repoList = repos?.map((r:any) => (
     <div key={ r.id }>
@@ -24,9 +26,12 @@ const Repos: React.FC = () => {
       { loading && <div>Loading...</div> }
       { errorDisplay }
       { repoCount === '0' ?
-        <h2>There are no repos matching those parameters. </h2>
-        : repoCount && parseInt(repoCount) > 0 ?
-        repoList 
+        <h3>There are no repos matching those parameters. </h3>
+        : repos && !loading ?
+        <RepoListContainer>
+          <h3>Your search returned { repoCount } results. Showing the first 100: </h3>
+          { repoList }
+        </RepoListContainer>
         :
         null
       }
@@ -36,3 +41,8 @@ const Repos: React.FC = () => {
 
 
 export default Repos
+
+const RepoListContainer = styled.section `
+  padding: 1.5rem;
+
+`

@@ -11,11 +11,11 @@ enum ActionType {
 interface State {
   repos?: any,
   repo: any,
-  repoCount: any,
+  repoCount: number | null,
   loading: boolean,
   errors?: any,
-  fetchRepos: ((term: string) => Promise<any>) | undefined,
-  fetchRepo: ((owner: string, repo: string) => Promise<any>) | undefined
+  fetchRepos: ((term: string) => Promise<any>),
+  fetchRepo: ((owner: string, repo: string) => Promise<any>) 
 }
 
 interface Action {
@@ -24,7 +24,7 @@ interface Action {
 }
 
 // declare state for provider
-const initialState = {
+const initialState:State = {
   repos: [],
   repoCount: null,
   repo: {},
@@ -58,7 +58,7 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         loading: false,
         errors: {},
         repos: action.payload.items,
-        repoCount: action.payload.total_count.toString() 
+        repoCount: action.payload.total_count
       }
       // ^^^ using toString here so we get a truthy value because JS treats null/undefined/0 the same
     case ActionType.SUCCESSFUL_REPO_FETCH:

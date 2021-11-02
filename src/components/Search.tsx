@@ -31,7 +31,7 @@ const Search: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const queryString = await setQueryString()
-    fetchRepos(queryString)
+    fetchRepos && fetchRepos(queryString)
     formRef.current.reset()
   }
 

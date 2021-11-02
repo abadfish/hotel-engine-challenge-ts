@@ -8,7 +8,6 @@ import { ReposContext } from '../../Provider'
 const Repos: React.FC = () => {
 
   const { loading, repos, errors, repoCount } = useContext(ReposContext)
-  console.log(repos)
   
   const repoList = repos?.map((r:any) => (
     <div key={ r.id }>
@@ -20,12 +19,12 @@ const Repos: React.FC = () => {
     Object.values(errors).map((error:any) => <div>{ error }</div>)
   : null
 
-    return (
+  return (
     <div>
       <Search />
       { loading && <div>Loading...</div> }
       { errorDisplay }
-      { repoCount === '0' ?
+      { repoCount === 0 ?
         <h3>There are no repos matching those parameters. </h3>
         : repos && !loading ?
         <RepoListContainer>

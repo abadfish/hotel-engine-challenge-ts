@@ -1,3 +1,5 @@
+<!-- I might just remove the standard CRA readme stuff and add some stuff for the reviewer - just how to get started (yarn && yarn start) and maybe a bit about what the project does. It likely won't be anything new to them, but it's pretty low hanging fruit when it comes to making it easier to review. -->
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

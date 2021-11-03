@@ -1,5 +1,8 @@
 import React, { createContext, useReducer } from 'react'
 
+
+// I like this file a lot, it's a nice pattern to use to distribute global data (as well as the functions
+// to fetch a single repo and several repos) - really nice, good work!
 enum ActionType {
   MAKING_API_REQUEST = "MAKING_API_REQUEST",
   SUCCESSFUL_REPOS_FETCH = "SUCCESSFUL_REPOS_FETCH",

@@ -7,11 +7,19 @@ const Search: React.FC = () => {
 
   const { fetchRepos } = useContext(ReposContext)
 
-  const [urlParams, setUrlParams] = useState({
-    searchTerm: '',
-    filterBy: '',
-    sortBy: '',
-  })
+  // I think Bogdan covers this in one of the frontend videos - using Hooks, it's more useful
+  // to have one state variable for each value, rather than an object of all state in one
+  // const [urlParams, setUrlParams] = useState({
+  //   searchTerm: '',
+  //   filterBy: '',
+  //   sortBy: '',
+  // })
+
+  // this would have knock-on effects further down, of course. I won't make those changes as they should be
+  // obvious and straight-forward from here
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterBy, setFilterBy] = useState('');
+  const [sortBy, setSortBy] = useState('');
 
   const formRef = useRef<HTMLFormElement>(null!)
 
@@ -40,8 +48,11 @@ const Search: React.FC = () => {
       <Fields>
         <div>
           <p>Search by:</p>
-          <input 
-            type='text' 
+          <input
+          // I learnt very recently about this input type!
+          // https://www.w3schools.com/html/html_form_input_types.asp
+          // Not sure if it's useful, but good to know maybe for interveies
+            type='search'
             name='searchTerm'
             placeholder='Enter search term'
             onChange={ handleOnChange }
@@ -74,6 +85,8 @@ const Search: React.FC = () => {
 
 export default Search
 
+
+// again, good use of SC to separate cosmetics
 const Form = styled.form `
   width: 100%;
   padding: 1.5rem;

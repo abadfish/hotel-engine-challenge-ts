@@ -3,7 +3,9 @@ import { useParams, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReposContext } from '../../Provider'
 
-
+// there's generally quite a lot of any types in here (and a few in other files)
+// I guess this was due to time constraints and not wanting to spend too much time
+// on typing
 
 const Repo: React.FC = () => {
 
@@ -23,6 +25,8 @@ const Repo: React.FC = () => {
   }, [owner, repoName])
 
   // I have done this because there are too many details to type them all. Readme did not specify which to render so you get them all!
+  // This function seems like it could be extracted to somewhere outside of this component - even if just
+  // above/below it, but also optionally to a separate file (where it could be unit tested also)
   function parseRepoDetails(details: any) {
     const repoKeys:any = []
     const repoValues:any = []
@@ -30,7 +34,8 @@ const Repo: React.FC = () => {
       if (value === null ) {
         repoKeys.push(key)
         repoValues.push('N/A')
-      } else if (typeof value === 'string' || typeof value === 'number') {
+      // this is a nice trick I learnt which makes these sorts of logical tests more extensible
+      } else if (['string', 'number'].includes(typeof value)) {
         repoKeys.push(key)
         repoValues.push(value)
       } else if (typeof value === 'object') {
@@ -47,6 +52,8 @@ const Repo: React.FC = () => {
     ))      
   }
 
+  // from what I can tell this function could also be extracted to outside of this component
+  // it doesn't need to be recreated with every render
   const truncatedDetails = (repo:any) => {
     return (
       <section key={ repo?.id }>
@@ -66,10 +73,12 @@ const Repo: React.FC = () => {
       </section>
     )
   }
-  
+
+  // if they ask about performance, as well as the above two functions being extracted, you could also mention
+  // memoizing these two - if the repo doesn't change, neither will these values
   const repoDetails = repo ? parseRepoDetails(repo) : null
   const truncatedRepo = repo ? truncatedDetails(repo) : null
-     
+
   return (
     <DetailPage>
       <NavLink to='/'>Back to search results</NavLink>
@@ -90,6 +99,8 @@ const Repo: React.FC = () => {
 
 export default Repo
 
+
+// great use of styled components to separate functionality from cosmetics
 const DetailPage = styled.main `
   padding: 1rem 1.5rem;
   @media (max-width: 768px) {
